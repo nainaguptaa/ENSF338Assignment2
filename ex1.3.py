@@ -1,10 +1,12 @@
-def func(n, memo={}):
+import timeit
+x  = {}
+def memo(n):
     if n == 0 or n == 1:
         return n
-    if n in memo:
-        return memo[n]
-    else:
-        result = func(n-1, memo) + func(n-2, memo)
-        memo[n] = result
-        return result
+    if n in x:
+        return x[n]
 
+    else:
+
+        x[n] =  memo(n-1) + memo(n-2)
+        return x[n]

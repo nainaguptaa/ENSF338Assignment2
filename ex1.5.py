@@ -1,52 +1,34 @@
-import time
+import timeit
 import matplotlib.pyplot as plt
 
-def original_code(n):
-    start = time.time()
-    if n == 0 or n == 1:
+def func(n):
+    if n== 0 or n==1:
         return n
     else:
-        result = original_code(n-1) + original_code(n-2)
-    end = time.time()
-    return end - start
+        return func(n-1)+func(n-2)
 
-def improved_version(n, memo={}):
-    start = time.time()
+x  = {}
+def memo(n):
     if n == 0 or n == 1:
         return n
-    if n in memo:
-        return memo[n]
+    if n in x:
+        return x[n]
     else:
-        result = improved_version(n-1, memo) + improved_version(n-2, memo)
-        memo[n] = result
-    end = time.time()
-    return end - start
+        x[n] =  memo(n-1) + memo(n-2)
+        return x[n]
 
-x = range(36)
-y1 = [0] * 36
-for i in x:
-    y1[i] = original_code(i)
+times_func = []
+times_memo = []
 
-y2 = [0] * 36
-for i in x:
-    y2[i] = improved_version(i)
+for i in range(36):
+    t = timeit.timeit(lambda: func(i), number=1)
+    times_func.append(t)
+    t = timeit.timeit(lambda: memo(i), number=1)
+    times_memo.append(t)
 
-plt.plot(x, y1, label='Original Code')
-plt.plot(x, y2, label='Improved Version')
-plt.xlabel('Input: n')
-plt.ylabel('Execution Time (Seconds)')
-plt.title('Comparison of Original Code and Improved Version')
+plt.plot(range(36), times_func, label="func")
+plt.plot(range(36), times_memo, label="memo")
 plt.legend()
+plt.xlabel("n")
+plt.ylabel("Time (seconds)")
 plt.show()
-
-
-
-
-
-
-
-
-
-
-
-
